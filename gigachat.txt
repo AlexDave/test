@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GigaChat Tooltip</title>
+</head>
+<body>
+    <div class="gigachat-tooltip" data-param="12345">Hover over me!</div>
+
+    <script>
+        // Добавляем стили через JavaScript
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .gigachat-tooltip {
+                position: relative;
+                display: inline-block;
+                margin: 10px;
+            }
+            .gigachat-icon {
+                position: absolute;
+                right: -30px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 24px;
+                height: 24px;
+                background-image: url('path/to/gigachat-icon.png');
+                background-size: cover;
+                cursor: pointer;
+                display: none;
+            }
+            .tooltip-popup {
+                position: absolute;
+                padding: 8px;
+                border-radius: 4px;
+                background-color: #333;
+                color: #fff;
+                font-size: 12px;
+                line-height: 1.4;
+                white-space: nowrap;
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.querySelectorAll('.gigachat-tooltip').forEach((element) => {
+            const icon = document.createElement('div');
+            icon.classList.add('gigachat-icon');
+            element.appendChild(icon);
+
+            element.addEventListener('mouseenter', () => {
+                icon.style.display = 'block';
+            });
+
+            element.addEventListener('mouseleave', () => {
+                icon.style.display = 'none';
+            });
+
+            icon.addEventListener('click', async () => {
+                const param = element.getAttribute('data-param');
+                const response = await fetch(`https://your-api-url.com?param=${param}`);
+                const data = await response.json();
+
+                let tooltipPopup = element.querySelector('.tooltip-popup');
+                if (!tooltipPopup) {
+                    tooltipPopup = document.createElement('div');
+                    tooltipPopup.classList.add('tooltip-popup');
+                    tooltipPopup.style.left = `${icon.offsetLeft + icon.offsetWidth + 10}px`;
+                    tooltipPopup.style.top = `50%`;
+                    tooltipPopup.style.transform = `translateY(-50%)`;
+                    element.appendChild(tooltipPopup);
+                }
+
+                tooltipPopup.innerHTML = `<strong>GigaChat</strong><br>${data.message}`;
+                tooltipPopup.style.opacity = '1';
+
+                setTimeout(() => {
+                    tooltipPopup.style.opacity = '0';
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
