@@ -58,11 +58,7 @@
                 icon.style.display = 'none';
             });
 
-            icon.addEventListener('click', async () => {
-                const param = element.getAttribute('data-param');
-                const response = await fetch(`https://your-api-url.com?param=${param}`);
-                const data = await response.json();
-
+            icon.addEventListener('click', () => {
                 let tooltipPopup = element.querySelector('.tooltip-popup');
                 if (!tooltipPopup) {
                     tooltipPopup = document.createElement('div');
@@ -73,7 +69,8 @@
                     element.appendChild(tooltipPopup);
                 }
 
-                tooltipPopup.innerHTML = `<strong>GigaChat</strong><br>${data.message}`;
+                // Эмулируем ответ с хардкоженным сообщением
+                tooltipPopup.innerHTML = `<strong>GigaChat</strong><br>Hardcoded message displayed!`;
                 tooltipPopup.style.opacity = '1';
 
                 setTimeout(() => {
